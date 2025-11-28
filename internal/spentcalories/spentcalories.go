@@ -26,7 +26,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	if err != nil || steps <= 0 {
 		return 0, "", 0, fmt.Errorf("Ошибка подсчета количества шагов")
 	}
-	activity := strings.ToUpper(parts[1])
+	activity := strings.Title(strings.ToLower(parts[1]))
 	if activity != "Ходьба" && activity != "Бег" {
 		return 0, "", 0, fmt.Errorf("Ошибка: неизвестный вид активности")
 	}
@@ -64,15 +64,21 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	var calories float64
 	switch activity {
 	case "Бег":
-		calories = RunningSpentCalories(steps, weight, height, duration)
+		calories, err = RunningSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			return "", err
+		}
 	case "Ходьба":
-		calories = walkingCaloriesCoefficient(steps, weight, height, duration)
+		calories, err = WalkingSpentCalories(steps, weight, height, duration)
+		if err != nil {
+			return "", err
+		}
 	default:
 		return "", fmt.Errorf("неизвестный тип тренировки")
 	}
 	result := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f",
-		activity, duration.Hours, distanceKm, speedKmH, calories)
-	return result
+		activity, duration.Hours(), distanceKm, speedKmH, calories)
+	return result, nil
 }
 
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
