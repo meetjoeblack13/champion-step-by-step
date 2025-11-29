@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
+	"github.com/meetjoeblack13/champion-step-by-step/internal/spentcalories"
 )
 
 const (
