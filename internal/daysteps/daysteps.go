@@ -17,7 +17,7 @@ const (
 	mInKm = 1000
 )
 
-func parsePackage(data string) (int, time.Duration, error) {
+func parsePackage(data string) (int, time.Duration, error) { // Функция для обработки входящих данных
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
 		return 0, 0, fmt.Errorf("Ошибка ввода!")
@@ -33,7 +33,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 	return steps, duration, nil
 }
 
-func DayActionInfo(data string, weight, height float64) string {
+func DayActionInfo(data string, weight, height float64) string { // Функция для возврата данных о тренировке
 	steps, duration, err := parsePackage(data)
 	if err != nil {
 		log.Println(err)
