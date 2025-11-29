@@ -28,7 +28,7 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 	}
 	activity := strings.Title(strings.ToLower(parts[1]))
 	if activity != "Ходьба" && activity != "Бег" {
-		return 0, "", 0, fmt.Errorf("Ошибка: неизвестный вид активности")
+		return 0, "", 0, fmt.Errorf("Ошибка: неизвестный тип тренировки")
 	}
 	duration, err := time.ParseDuration(parts[2])
 	if err != nil || duration <= 0 {
@@ -76,7 +76,7 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	default:
 		return "", fmt.Errorf("неизвестный тип тренировки")
 	}
-	result := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f",
+	result := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n",
 		activity, duration.Hours(), distanceKm, speedKmH, calories)
 	return result, nil
 }
