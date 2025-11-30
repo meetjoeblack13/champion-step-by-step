@@ -1,6 +1,7 @@
 package daysteps
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -20,15 +21,21 @@ const (
 func parsePackage(data string) (int, time.Duration, error) { // Функция для обработки входящих данных
 	parts := strings.Split(data, ",")
 	if len(parts) != 2 {
-		return 0, 0, fmt.Errorf("Ошибка ввода!")
+		return 0, 0, errors.New("input error")
 	}
 	steps, err := strconv.Atoi(parts[0])
-	if err != nil || steps <= 0 {
-		return 0, 0, fmt.Errorf("Ошибка подсчета количества шагов")
+	if err != nil {
+		return 0, 0, errors.New("steps parsing error")
+	}
+	if steps <= 0 {
+		return 0, 0, errors.New("steps calculation error")
 	}
 	duration, err := time.ParseDuration(parts[1])
-	if err != nil || duration <= 0 {
-		return 0, 0, fmt.Errorf("Ошибка подсчета продолжительности прогулки")
+	if err != nil {
+		return 0, 0, errors.New("duration parsing error")
+	}
+	if duration <= 0 {
+		return 0, 0, errors.New("duration calculation error")
 	}
 	return steps, duration, nil
 }
@@ -43,7 +50,7 @@ func DayActionInfo(data string, weight, height float64) string { // Функци
 		return ""
 	}
 	distanceMeters := float64(steps) * stepLength
-	distanceKilometers := distanceMeters / float64(mInKm)
+	distanceKilometers := distanceMeters / mInKm
 	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)
 	return fmt.Sprintf("Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
 		steps, distanceKilometers, calories)
